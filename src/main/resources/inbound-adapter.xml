@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-http="http://www.springframework.org/schema/integration/http"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/integration
+    http://www.springframework.org/schema/integration/spring-integration.xsd
+    http://www.springframework.org/schema/integration/http
+    http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+
+    <int:channel id="postChannel" />
+    <int:channel id="routeRequest" />
+
+    <int-http:inbound-channel-adapter
+            channel="routeRequest" status-code-expression="T(org.springframework.http.HttpStatus).NO_CONTENT"
+            supported-methods="POST" path="/payment"
+            request-payload-type="com.gromoks.paymentsystem.model.Payment">
+
+        <int-http:request-mapping consumes="application/json" />
+    </int-http:inbound-channel-adapter>
+
+    <int:router input-channel="routeRequest" expression="headers.http_requestMethod">
+        <int:mapping value="POST" channel="postChannel" />
+    </int:router>
+
+    <int:service-activator ref="inboundEnpoint" method="post" input-channel="postChannel" />
+    <bean id="inboundEnpoint" class="com.gromoks.paymentsystem.endpoint.InboundEndpoint" />
+</beans>
