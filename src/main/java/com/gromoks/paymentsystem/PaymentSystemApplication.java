@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
-@ImportResource({"classpath:inbound-adapter.xml", "classpath:inbound-gateway.xml"})
+@ImportResource({"classpath:inbound-gateway.xml"})
 @SpringBootApplication
 public class PaymentSystemApplication {
 

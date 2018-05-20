@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service
 public class PaymentService {
-    Map<Long, Payment> paymentStorage = new HashMap<>();
+    private Map<Long, Payment> paymentStorage = new HashMap<>();
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -24,13 +24,14 @@ public class PaymentService {
         paymentStorage.put(secondPayment.getId(), secondPayment);
     }
 
-    public void create(Payment payment) {
+    public Payment create(Payment payment) {
         log.info("Started to create payment: {}", payment);
         long startTime = System.currentTimeMillis();
 
         paymentStorage.put(payment.getId(), payment);
 
         log.info("Payment is created. It took {} ms", System.currentTimeMillis() - startTime);
+        return paymentStorage.get(payment.getId());
     }
 
     public Payment getById(long id) {
